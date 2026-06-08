@@ -14,12 +14,12 @@ Concepts introduced:
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.retrievers import (
+from langchain_classic.retrievers import (
     MultiQueryRetriever,
     ContextualCompressionRetriever,
     EnsembleRetriever,
 )
-from langchain.retrievers.document_compressors import LLMChainExtractor
+from langchain_classic.retrievers.document_compressors import LLMChainExtractor
 from langchain_community.retrievers import BM25Retriever
 from shared.llm import get_llm
 from shared.embeddings import get_embeddings
