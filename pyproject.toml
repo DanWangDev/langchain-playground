@@ -15,5 +15,5 @@ dependencies = [
     "pydantic>=2",
 ]
 
-[tool.uv]
-dev-dependencies = []
+[dependency-groups]
+dev = []
