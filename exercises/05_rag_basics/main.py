@@ -16,40 +16,16 @@ RAG Pipeline:
   Documents → Split → Embed → Store → Retrieve → Augment → Generate
 """
 
-import os
-from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
-from langchain_core.prompts import MessagesPlaceholder
-
-load_dotenv()
-
-
-def get_embeddings():
-    """Qwen embeddings via DashScope (OpenAI-compatible endpoint)."""
-    return OpenAIEmbeddings(
-        model="text-embedding-v3",
-        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        api_key=os.environ["DASHSCOPE_API_KEY"],
-    )
-
-
-def get_llm():
-    """DeepSeek chat model."""
-    return ChatOpenAI(
-        model="deepseek-chat",
-        temperature=0,
-        base_url="https://api.deepseek.com/v1",
-        api_key=os.environ["DEEPSEEK_API_KEY"],
-    )
+from shared.llm import get_llm
+from shared.embeddings import get_embeddings
 
 
 def load_and_split_documents(docs_dir: str = "data/sample_docs"):

@@ -11,14 +11,9 @@ Concepts introduced:
 - BM25Retriever — keyword-based retrieval for hybrid search
 """
 
-import os
-from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 from langchain.retrievers import (
     MultiQueryRetriever,
     ContextualCompressionRetriever,
@@ -26,25 +21,8 @@ from langchain.retrievers import (
 )
 from langchain.retrievers.document_compressors import LLMChainExtractor
 from langchain_community.retrievers import BM25Retriever
-
-load_dotenv()
-
-
-def get_embeddings():
-    return OpenAIEmbeddings(
-        model="text-embedding-v3",
-        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        api_key=os.environ["DASHSCOPE_API_KEY"],
-    )
-
-
-def get_llm(temperature=0):
-    return ChatOpenAI(
-        model="deepseek-chat",
-        temperature=temperature,
-        base_url="https://api.deepseek.com/v1",
-        api_key=os.environ["DEEPSEEK_API_KEY"],
-    )
+from shared.llm import get_llm
+from shared.embeddings import get_embeddings
 
 
 def load_chunks():
