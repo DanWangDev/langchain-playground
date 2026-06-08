@@ -1,0 +1,33 @@
+Python Tips for LangChain Development
+=======================================
+
+1. Use Type Hints
+   Python's type hints make LangChain code easier to understand and debug.
+   LangChain's Runnable types are all generic: Runnable[Input, Output]
+
+2. Async/Await Patterns
+   LangChain supports both sync and async invocation. For production, prefer async:
+   result = await chain.ainvoke(input)
+   async for chunk in chain.astream(input):
+       process(chunk)
+
+3. Environment Variables
+   Always store API keys in environment variables, never hardcode them.
+   Use python-dotenv to load .env files during development.
+
+4. Error Handling
+   LangChain chains can fail at any step. Use .with_fallbacks() and
+   try/except around .invoke() calls for production robustness.
+
+5. Streaming
+   For responsive UIs, stream tokens rather than waiting for the full response:
+   for chunk in chain.stream(input):
+       print(chunk, end="", flush=True)
+
+6. Pydantic Models
+   Use Pydantic for structured output. LangChain's .with_structured_output()
+   is the modern approach for getting typed responses from LLMs.
+
+7. Vector Stores
+   ChromaDB is great for local development. For production, consider
+   Pinecone, Weaviate, or pgvector depending on your scale.

@@ -1,0 +1,23 @@
+LangChain: An Overview
+======================
+
+LangChain is a framework for building applications powered by large language models (LLMs).
+It provides a standard interface for chains, lots of integrations with other tools, and
+end-to-end chains for common applications.
+
+Key Components:
+- Models: Wrappers around LLMs and chat models (ChatOpenAI, ChatAnthropic, etc.)
+- Prompts: Templating, few-shot examples, and output parsers
+- Chains: Combine multiple components using LCEL (LangChain Expression Language)
+- RAG: Retrieval Augmented Generation — ground LLM responses in your own documents
+- Agents: LLMs that reason about which tools to call and in what order
+- Memory: Persist state between calls (conversation history, entity memory)
+- Callbacks: Hook into the lifecycle of any LangChain operation
+- LangGraph: Build stateful, multi-actor applications with graphs
+
+LangChain Expression Language (LCEL) uses the pipe operator (|) to chain components:
+    chain = prompt | llm | output_parser
+    result = chain.invoke({"question": "..."})
+
+RAG Pattern:
+Documents → Text Splitters → Embeddings → Vector Store → Retriever → LLM → Answer

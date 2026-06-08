@@ -1,0 +1,19 @@
+[project]
+name = "langchain-playground"
+version = "0.1.0"
+description = "Hands-on LangChain learning playground using DeepSeek and Qwen models"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-core>=0.3",
+    "langchain-openai>=0.3",
+    "langchain-chroma>=0.2",
+    "langchain-community>=0.3",
+    "langgraph>=0.2",
+    "langchain-text-splitters>=0.3",
+    "python-dotenv>=1.0",
+    "chromadb>=0.5",
+    "pydantic>=2",
+]
+
+[tool.uv]
+dev-dependencies = []

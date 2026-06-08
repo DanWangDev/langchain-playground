@@ -1,0 +1,31 @@
+AI Agents Explained
+===================
+
+An AI agent is an LLM-powered system that can reason about a task, decide which tools
+to use, execute those tools, and iterate until the task is complete.
+
+The Agent Loop:
+1. LLM receives the user's query and available tool descriptions
+2. LLM decides: respond directly OR call a tool with specific arguments
+3. If tool called: execute the tool, feed the result back to the LLM
+4. Repeat until the LLM produces a final answer
+
+Types of Agents in LangChain:
+- Tool-calling agents: Modern approach using native function calling
+- ReAct agents: Reason + Act pattern (thought → action → observation loop)
+- OpenAI functions agent: Uses OpenAI's function calling format
+- Structured chat agent: Supports multi-input tools
+
+Key Concepts:
+- Tool: A function the agent can call (get_weather, search_web, run_code)
+- AgentExecutor: Runtime that manages the agent loop (iteration limit, error handling)
+- Agent scratchpad: Stores the history of tool calls and results during an agent run
+- Early stopping: Stop the agent after N iterations even if it hasn't produced a final answer
+
+LangGraph Agents:
+LangGraph provides a more flexible agent framework. Instead of a fixed loop,
+you define a state graph with nodes (steps) and edges (transitions). This enables:
+- Multi-agent collaboration
+- Human-in-the-loop approval steps
+- Persistent state across interactions
+- Parallel tool execution
