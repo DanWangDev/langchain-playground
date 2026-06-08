@@ -70,7 +70,14 @@ class FakeLLM(Runnable):
         # Extract text from input
         text = self._extract_text(input)
 
-        # If tools are bound and the input asks for tool-like things, simulate tool call
+        # If we already have a tool result in the conversation, produce final answer
+        if self._tools and ("ToolMessage" in text or "tool_call_id" in text.lower() or "Result:" in text):
+            return AIMessage(
+                content=f"[FakeLLM/{self.model}] Based on the tool results, here is the answer: {text[:50]}...",
+                response_metadata={"model_name": f"fake-{self.model}", "token_usage": {"prompt_tokens": 10, "completion_tokens": 5}},
+            )
+
+        # If tools are bound and the input asks for tool-like things, simulate ONE tool call
         if self._tools and any(
             kw in text.lower() for kw in ("calculate", "time", "weather", "count", "reverse", "length", "word")
         ):
