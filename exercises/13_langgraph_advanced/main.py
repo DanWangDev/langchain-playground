@@ -203,7 +203,7 @@ def demo_human_in_the_loop():
     graph.add_conditional_edges("approval", approval_router, {"finalize": "finalize", END: END})
     graph.add_edge("finalize", END)
 
-    app = graph.compile()
+    app = graph.compile(checkpointer=MemorySaver())
 
     thread = {"configurable": {"thread_id": "approval-demo"}}
 

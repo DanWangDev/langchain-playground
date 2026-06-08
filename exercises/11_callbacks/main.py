@@ -63,14 +63,15 @@ class ChainLogger(BaseCallbackHandler):
     """Log every chain and tool step."""
 
     def on_chain_start(self, serialized, inputs, **kwargs):
-        name = serialized.get("name", "unnamed")
+        name = serialized.get("name", "unnamed") if serialized else "unnamed"
         print(f"  🔗 Chain start: {name}")
 
     def on_chain_end(self, outputs, **kwargs):
         print(f"  🔗 Chain end")
 
     def on_tool_start(self, serialized, input_str, **kwargs):
-        print(f"  🔧 Tool start: {serialized.get('name', 'unknown')}")
+        name = serialized.get("name", "unknown") if serialized else "unknown"
+        print(f"  🔧 Tool start: {name}")
 
     def on_tool_end(self, output, **kwargs):
         print(f"  🔧 Tool end: {str(output)[:100]}")
