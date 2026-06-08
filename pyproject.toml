@@ -5,6 +5,7 @@ description = "Hands-on LangChain learning playground using DeepSeek and Qwen mo
 requires-python = ">=3.11"
 dependencies = [
     "langchain>=0.3",
+    "langchain-classic>=0.3",
     "langchain-core>=0.3",
     "langchain-openai>=0.3",
     "langchain-chroma>=0.2",
