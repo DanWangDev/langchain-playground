@@ -26,6 +26,7 @@ jobs:
 
       - name: Run all exercises
         env:
+          PYTHONPATH: .
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
         run: |
