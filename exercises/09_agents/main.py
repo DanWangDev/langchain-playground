@@ -4,7 +4,7 @@ Exercise 09 — Agents
 Build autonomous agents that plan and execute multi-step tasks using tools.
 
 Concepts introduced:
-- create_react_agent — LangGraph's prebuilt ReAct agent
+- create_agent — LangGraph's prebuilt ReAct agent
 - Agent loop — think → act → observe → repeat
 - Tool-calling agent — modern approach using native function calling
 - Agent scratchpad — internal working memory during an agent run
@@ -21,7 +21,7 @@ Agent Pattern:
 import math
 from datetime import datetime
 from langchain_core.tools import tool
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from shared.llm import get_llm
 
 
@@ -75,7 +75,7 @@ def demo_basic_agent():
     llm = get_llm()
     tools = [get_current_time, calculator, word_length]
 
-    agent = create_react_agent(llm, tools)
+    agent = create_agent(llm, tools)
 
     result = agent.invoke(
         {"messages": [("user", "What time is it right now?")]}
@@ -101,7 +101,7 @@ def demo_multi_step_agent():
     llm = get_llm()
     tools = [get_current_time, calculator, word_length]
 
-    agent = create_react_agent(llm, tools)
+    agent = create_agent(llm, tools)
 
     # This requires: calculator → word_length → synthesize
     query = (
@@ -139,7 +139,7 @@ def demo_agent_with_system_prompt():
         "Use the calculator tool for calculations and explain what you did."
     )
 
-    agent = create_react_agent(llm, tools, state_modifier=system_prompt)
+    agent = create_agent(llm, tools, system_prompt=system_prompt)
 
     query = "What is 256 divided by 8, and then multiplied by 3?"
     print(f"\n👤 Query: {query}\n")
@@ -163,7 +163,7 @@ def demo_recursion_limit():
     tools = [calculator]
 
     # Create agent with a low recursion limit
-    agent = create_react_agent(llm, tools)
+    agent = create_agent(llm, tools)
 
     # Set a low recursion limit to demonstrate the safety net
     config = {"recursion_limit": 3}
