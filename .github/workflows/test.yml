@@ -1,0 +1,40 @@
+name: Run Exercises
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run all exercises
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+        run: |
+          echo "Discovering exercises..."
+          for exercise_dir in exercises/*/; do
+            if [ -f "${exercise_dir}main.py" ]; then
+              echo "::group::Running $(basename $exercise_dir)"
+              uv run python "${exercise_dir}main.py"
+              echo "::endgroup::"
+            fi
+          done
+          echo "All exercises completed."
