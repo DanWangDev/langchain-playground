@@ -98,8 +98,6 @@ def demo_retry():
     # Retry up to 3 times on failure, with exponential backoff
     resilient_chain = chain.with_retry(
         stop_after_attempt=3,
-        wait_exponential_multiplier=1000,  # 1s, 2s, 4s
-        wait_exponential_max=10000,         # max 10s
     )
 
     result = resilient_chain.invoke({"text": "Hello, production!"})
