@@ -70,15 +70,18 @@ class FakeLLM(Runnable):
         # Extract text from input
         text = self._extract_text(input)
 
-        # If we already have a tool result in the conversation, produce final answer
-        if self._tools and ("ToolMessage" in text or "tool_call_id" in text.lower() or "Result:" in text):
+        # Check if the input contains a ToolMessage (tool result fed back to LLM)
+        has_tool_result = self._has_tool_result(input)
+
+        # If we have tools AND we've already seen a tool result → produce final answer
+        if self._tools and has_tool_result:
             return AIMessage(
-                content=f"[FakeLLM/{self.model}] Based on the tool results, here is the answer: {text[:50]}...",
+                content=f"[FakeLLM/{self.model}] Based on the tool results, here is the answer.",
                 response_metadata={"model_name": f"fake-{self.model}", "token_usage": {"prompt_tokens": 10, "completion_tokens": 5}},
             )
 
         # If tools are bound and the input asks for tool-like things, simulate ONE tool call
-        if self._tools and any(
+        if self._tools and not has_tool_result and any(
             kw in text.lower() for kw in ("calculate", "time", "weather", "count", "reverse", "length", "word")
         ):
             return self._fake_tool_call(text)
@@ -87,6 +90,15 @@ class FakeLLM(Runnable):
             content=f"[FakeLLM/{self.model}] Received: {text[:100]}...",
             response_metadata={"model_name": f"fake-{self.model}", "token_usage": {"prompt_tokens": 10, "completion_tokens": 5}},
         )
+
+    def _has_tool_result(self, input) -> bool:
+        """Check if the input contains a ToolMessage (tool result fed back)."""
+        if isinstance(input, list):
+            for msg in input:
+                class_name = msg.__class__.__name__ if hasattr(msg, "__class__") else ""
+                if class_name == "ToolMessage":
+                    return True
+        return False
 
     def stream(self, input, config=None, **kwargs) -> Iterator[Any]:
         self._warn_once()
