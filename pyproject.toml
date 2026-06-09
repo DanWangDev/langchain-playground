@@ -16,6 +16,9 @@ dependencies = [
     "chromadb>=0.5",
     "pydantic>=2",
     "rank-bm25>=0.2",
+    "langsmith>=0.3",
+    "langchain-aws>=0.2",
+    "boto3>=1.35",
 ]
 
 [dependency-groups]
