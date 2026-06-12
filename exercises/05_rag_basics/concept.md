@@ -1,6 +1,6 @@
-# Exercise 05: RAG Basics / 练习 05：RAG 基础
+# Exercise 05: RAG Basics
 
-## What You'll Learn / 你将学到
+## What You'll Learn
 
 - **Document Loading** — load `.txt` files from a directory with `DirectoryLoader`
 - **Text Splitting** — chunk documents into overlapping pieces with `RecursiveCharacterTextSplitter`
@@ -9,7 +9,7 @@
 - **Retrieval Chain** — `create_retrieval_chain` wires retriever + QA chain together
 - **History-Aware Retrieval** — rephrase follow-up questions using chat history
 
-## Why RAG Matters / 为什么 RAG 很重要
+## Why RAG Matters
 
 Retrieval-Augmented Generation (RAG) is the most important LLM application pattern. It solves two fundamental problems:
 
@@ -24,7 +24,7 @@ With RAG:     User: "What's our return policy?"
               System: [retrieves policy doc] → "Returns accepted within 30 days with receipt." ✓
 ```
 
-## The RAG Pipeline / RAG 流水线
+## The RAG Pipeline
 
 ```
 ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
@@ -94,7 +94,7 @@ qa_chain = create_retrieval_chain(retriever, combine_docs_chain)
 
 `create_stuff_documents_chain` formats retrieved documents into the prompt. `create_retrieval_chain` wires the retriever and QA chain together.
 
-## History-Aware Retrieval / 历史感知检索
+## History-Aware Retrieval
 
 Follow-up questions are often incomplete without context:
 
@@ -109,7 +109,7 @@ User: "How does it work?"         → "It" refers to RAG — needs rephrasing!
 "It" → "How does RAG work?"
 ```
 
-## Key Concepts / 核心概念
+## Key Concepts
 
 ### Chunk Size Trade-offs
 
@@ -128,52 +128,10 @@ User: "How does it work?"         → "It" refers to RAG — needs rephrasing!
 
 Chroma uses cosine similarity by default: the angle between vectors determines relevance. Smaller angle = more similar.
 
-## Gotchas / 常见陷阱
+## Gotchas
 
 1. **Chunk overlap must be < chunk_size**: If overlap ≥ chunk_size, you get duplicate (or near-duplicate) chunks.
 2. **Embedding dimension mismatch**: Cannot search a store created with one embedding model using a different model.
 3. **Collection names matter**: Using the same collection name reuses existing data. Use unique names or clear between runs.
 4. **Metadata is lost on chunking**: `RecursiveCharacterTextSplitter` preserves metadata from the source document on each chunk.
 5. **Cost**: Embedding 1000 pages costs money. For learning, use small document sets.
-
----
-
-# 练习 05：RAG 基础
-
-## 你将学到
-
-- **文档加载** — 用 `DirectoryLoader` 从目录加载 `.txt` 文件
-- **文本切分** — 用 `RecursiveCharacterTextSplitter` 将文档切成带重叠的片段
-- **嵌入** — 通过 DashScope 用 Qwen 嵌入模型将文本转为向量
-- **向量存储** — 用 `Chroma` 存储和搜索嵌入向量
-- **检索链** — `create_retrieval_chain` 将检索器与问答链连接
-- **历史感知检索** — 利用对话历史改写后续问题
-
-## 为什么 RAG 很重要
-
-RAG（检索增强生成）解决了 LLM 的两个根本问题：
-1. **知识截止日期** — LLM 只知道训练数据中的内容，RAG 让它们能访问你的文档
-2. **幻觉** — LLM 不知道时会编造内容，RAG 将回答建立在真实文档之上
-
-## RAG 流水线
-
-```
-加载文档 → 切分文档 → 嵌入片段 → 存储向量 → 检索 Top-K → 增强提示词+文档 → LLM 生成 → 答案
-```
-
-## 核心概念
-
-### 片段大小权衡
-
-| 片段大小 | 优点 | 缺点 |
-|----------|------|------|
-| 小（100-300） | 精确检索，噪音少 | 可能丢失上下文 |
-| 中（500-1000） | 良好平衡 | 标准选择 |
-| 大（2000+） | 单片段内有完整上下文 | 检索噪音大，Token 消耗多 |
-
-## 常见陷阱
-
-1. **片段重叠必须 < 片段大小**：如果重叠 ≥ 片段大小，会产生重复片段。
-2. **嵌入维度必须匹配**：不能用不同的嵌入模型搜索用另一个模型创建的存储。
-3. **集合名称很重要**：使用相同的集合名称会复用已有数据。使用唯一名称或在运行之间清理。
-4. **成本**：嵌入大量页面需要费用。学习时使用小型文档集。
