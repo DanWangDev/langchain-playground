@@ -1,6 +1,6 @@
-# Exercise 15: LangSmith / 练习 15：LangSmith 追踪与评估
+# Exercise 15: LangSmith
 
-## What You'll Learn / 你将学到
+## What You'll Learn
 
 - **Automatic tracing** — zero code changes, just set environment variables
 - **@traceable decorator** — granular span-level tracing for custom functions
@@ -9,7 +9,7 @@
 - **Evaluation** — score chain outputs against expected answers
 - **Comparative evaluation** — compare providers (DeepSeek vs Qwen) side by side
 
-## Why LangSmith Matters / 为什么 LangSmith 很重要
+## Why LangSmith Matters
 
 LLM applications are **non-deterministic** — the same input can produce different outputs. Traditional logging and debugging don't work well. You need to see:
 
@@ -21,7 +21,7 @@ LLM applications are **non-deterministic** — the same input can produce differ
 
 LangSmith is the observability platform built specifically for LLM applications. It's like Datadog, but designed for chains and agents.
 
-## LangSmith Architecture / 架构
+## LangSmith Architecture
 
 ```
 Your Code                    LangSmith Cloud
@@ -37,7 +37,7 @@ Your Code                    LangSmith Cloud
                             └─────────────────────┘
 ```
 
-## How Tracing Works / 追踪原理
+## How Tracing Works
 
 ### 1. Automatic Tracing
 
@@ -87,7 +87,7 @@ result = chain.invoke({"topic": "dolphins"}, config=config)
 
 Tags and metadata make traces searchable and filterable in the LangSmith UI.
 
-## Evaluation / 评估
+## Evaluation
 
 ### Creating Datasets
 
@@ -134,7 +134,7 @@ DeepSeek (temp=0.3) → Score: 0.82 avg
 
 This is how you make **data-driven model selection decisions** — not based on benchmarks, but on YOUR actual use case.
 
-## Key Concepts / 核心概念
+## Key Concepts
 
 ### Traces and Spans
 
@@ -162,42 +162,10 @@ This makes it safe to add `@traceable` everywhere — it only activates when you
 
 LangSmith offers a free tier: 3,000 traces/month. This is enough for development and light production use.
 
-## Gotchas / 常见陷阱
+## Gotchas
 
 1. **@traceable is a no-op without config**: If you're not seeing traces, check `LANGCHAIN_TRACING_V2=true` and `LANGCHAIN_API_KEY`.
 2. **Don't trace sensitive data**: Traces include prompt content and LLM outputs. Don't trace PII, passwords, or secrets.
 3. **Dataset names are unique per workspace**: Creating a dataset with an existing name returns the existing one (idempotent).
 4. **Evaluation is async in LangSmith**: `client.evaluate()` runs experiments asynchronously. Check results in the UI, not immediately in code.
 5. **Comparative eval has API costs**: Each evaluation example calls the LLM — budget accordingly.
-
----
-
-# 练习 15：LangSmith 追踪与评估
-
-## 你将学到
-
-- **自动追踪** — 零代码更改，只需设置环境变量
-- **@traceable 装饰器** — 为自定义函数添加精细的 Span 级追踪
-- **运行名称、标签和元数据** — 通过 `RunnableConfig` 组织追踪
-- **数据集创建** — 从示例输入/输出构建评估数据集
-- **评估** — 根据预期答案对链的输出进行评分
-- **对比评估** — 并排比较不同服务商（DeepSeek vs Qwen）
-
-## 为什么 LangSmith 很重要
-
-LLM 应用是**非确定性的**——相同的输入可能产生不同的输出。传统日志和调试效果不佳。LangSmith 是专为 LLM 应用构建的可观测性平台——就像 Datadog，但为链和智能体而设计。
-
-## 追踪架构
-
-只需设置环境变量——无需代码更改。每次 `.invoke()` 调用自动向 LangSmith 发送追踪数据。当未配置 LangSmith 时，`@traceable` 是**空操作**——无任何影响地透传。这意味着你可以装饰代码，在有或没有 LangSmith 的情况下都能正常工作。
-
-## 评估
-
-数据集是 **(input, expected_output)** 对的集合。你针对每个输入运行链，并将输出与预期输出进行比较。LangSmith 支持自定义评估器和内置评估器（正确性、有用性、毒性）。
-
-## 常见陷阱
-
-1. **没有配置时 @traceable 是空操作**：如果看不到追踪数据，检查 `LANGCHAIN_TRACING_V2=true` 和 `LANGCHAIN_API_KEY`。
-2. **不要追踪敏感数据**：追踪包含提示词内容和 LLM 输出。不要追踪 PII、密码或密钥。
-3. **数据集名称在工作区内唯一**：创建同名数据集返回已有数据集（幂等）。
-4. **评估在 LangSmith 中是异步的**：`client.evaluate()` 异步运行实验。在 UI 中查看结果，而不是立即在代码中获取。
