@@ -1,6 +1,6 @@
-# Exercise 08: Tools / 练习 08：工具
+# Exercise 08: Tools
 
-## What You'll Learn / 你将学到
+## What You'll Learn
 
 - **@tool decorator** — the simplest way to define a callable tool
 - **StructuredTool.from_function()** — explicit schema definition for tools
@@ -9,7 +9,7 @@
 - **ToolMessage** — the result returned to the LLM after tool execution
 - **Error handling** — graceful failure when tools encounter invalid input
 
-## Why Tools Matter / 为什么工具很重要
+## Why Tools Matter
 
 LLMs are powerful reasoning engines, but they're trapped in their training data. They can't:
 
@@ -28,7 +28,7 @@ LLM: [Calls tools] → Result: 105, "22°C"
 LLM: [Responds] "15*7 = 105, and it's currently 22°C in Tokyo."
 ```
 
-## How Tools Work / 工具的工作原理
+## How Tools Work
 
 ```
 ┌──────────────────────────────────────────────────────┐
@@ -117,7 +117,7 @@ reverse_tool = StructuredTool.from_function(
 
 Use this when you need a custom name, description, or args_schema that differs from the function signature.
 
-## Key Concepts / 核心概念
+## Key Concepts
 
 ### @tool vs StructuredTool
 
@@ -148,52 +148,10 @@ allowed_names["__builtins__"] = {}
 result = eval(expression, allowed_names, {})
 ```
 
-## Gotchas / 常见陷阱
+## Gotchas
 
 1. **Tool descriptions drive behavior**: The LLM decides to call a tool based on its description. Vague descriptions → wrong tool chosen or tool not called at all.
 2. **bind_tools() requires supported models**: Not all models support native tool-calling. Older models need prompt-based tool descriptions.
 3. **ToolMessage must be in messages list**: The LLM needs to see the tool result. Forgetting to append `ToolMessage` means the LLM won't know the result.
 4. **tool_call_id must match**: When constructing `ToolMessage`, the `tool_call_id` must match the ID from the LLM's `tool_calls`. Mismatched IDs may cause the LLM to ignore the result.
 5. **Tool errors should return strings, not raise exceptions**: If a tool raises an exception, the agent crashes. Return error strings so the LLM can handle the failure gracefully.
-
----
-
-# 练习 08：工具
-
-## 你将学到
-
-- **@tool 装饰器** — 定义可调用工具的最简方式
-- **StructuredTool.from_function()** — 工具的显式 schema 定义
-- **bind_tools()** — 将工具绑定到 LLM 以启用工具调用
-- **工具调用流程** — LLM 决定调用哪个工具、带什么参数
-- **ToolMessage** — 工具执行后返回给 LLM 的结果
-- **错误处理** — 工具遇到无效输入时的优雅失败
-
-## 为什么工具很重要
-
-LLM 是强大的推理引擎，但它们受限于训练数据。它们无法查当前时间、查询数据库、调用 API、可靠地计算或读取文件。**工具打破了 LLM 的沙盒限制**，将推理能力与外部世界连接起来。
-
-## 工具调用流程
-
-1. 用户发送查询
-2. LLM 决定：直接回复 OR 调用工具
-3. 如果调用工具：执行工具，获取结果
-4. 将 ToolMessage 反馈给 LLM
-5. LLM 综合最终答案
-
-## @tool vs StructuredTool
-
-| 特性 | @tool | StructuredTool.from_function() |
-|------|-------|-------------------------------|
-| Schema 推断 | 从类型注解自动推断 | 显式控制 |
-| 名称 | 使用函数名 | 自定义名称 |
-| 文档字符串用途 | 用作描述 | 分离的描述 + 参数说明 |
-| 最适合 | 简单工具 | 需要自定义 schema 的工具 |
-
-## 常见陷阱
-
-1. **工具描述驱动行为**：LLM 根据描述决定是否调用工具。模糊的描述 → 选错工具或不调用工具。
-2. **bind_tools() 需要模型支持**：并非所有模型都支持原生工具调用。旧模型需要基于提示词的工具描述。
-3. **ToolMessage 必须在消息列表中**：LLM 需要看到工具结果。忘记添加 `ToolMessage` 意味着 LLM 不知道结果。
-4. **tool_call_id 必须匹配**：构造 `ToolMessage` 时，`tool_call_id` 必须与 LLM 的 `tool_calls` 中的 ID 匹配。不匹配的 ID 可能导致 LLM 忽略结果。
-5. **工具错误应返回字符串而非抛异常**：如果工具抛异常，Agent 会崩溃。返回错误字符串让 LLM 优雅地处理失败。
